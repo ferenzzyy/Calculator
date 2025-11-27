@@ -14,6 +14,9 @@ font = pygame.font.SysFont('Arial',40)
 result = 0
 num1 = 0
 num2 = 0
+num1str = ""
+num2str = ""
+
 
 class Button():
     def __init__(self, btn_text, colour, size_x, size_y, pos_x, pos_y):
@@ -71,6 +74,7 @@ can_dial_number1 = True
 can_dial_number2 = False
 addition = False
 subtraction = False
+value = 0
 
 while running:
     mouse_pos = pygame.Vector2(pygame.mouse.get_pos(desktop=False)[0], pygame.mouse.get_pos(desktop=False)[1])
@@ -80,37 +84,56 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    
-
-    
+    screen_txt_surface = font.render(str(value), True, "white")
+    screen_txt_rect = screen_txt_surface.get_rect()
+    screen_txt_rect.center = pygame.Vector2(265,145) 
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
+    screen.blit(screen_txt_surface, screen_txt_rect)
     equals_btn.DrawButton()
-
+    # print(can_dial_number1, can_dial_number2)
 
     # Renders Number Buttons
     for item in number_btns:
         item.DrawButton()
-        
-        if item.Clicking() and isinstance(int(item.btn_txt), int) and can_dial_number1:
-            can_dial_number1 = False
-            num1 = int(item.btn_txt)
-            print(num1)
-            can_dial_number2 = True
+        if can_dial_number1:
+            if item.Clicking() and isinstance(int(item.btn_txt), int) :
+                # can_dial_number1 = False
+                
+                num1str = f"{num1str}{item.btn_txt}"
+                num1 = int(num1str)
+                value = f"{num1}"
+                print(f"Number 1: {num1}")
+                # can_dial_number2 = True
+        else:
+            if can_dial_number2:
+                if item.Clicking() and isinstance(int(item.btn_txt), int):
+                    num2str = f"{num2str}{item.btn_txt}"
+                    num2 = int(num2str)
+                    value = f"{value}{num2}"
+                    print(f"Number 2: {num2}")
 
-        elif item.Clicking() and isinstance(int(item.btn_txt), int) and can_dial_number2 and not can_dial_number1:
-            num2 = int(item.btn_txt)
-            print(num2)
-    
+    if can_dial_number1 == True:
+        can_dial_number2 = False
+    else:
+        can_dial_number2 = True
+
+
     # Renders Operator buttons 
     for item in operator_btn:
         item.DrawButton()
         if item.Clicking():
+            can_dial_number1 = False
             match (item.btn_txt):
                 case ("+"):
+                    print("+")
+                    value = f"{value} {"+"} "
                     addition = True
+                    
                 case ("-"):
+                    print("-")
+                    value = f"{value} {"-"} "
                     subtraction = True
             # end match
 
@@ -118,15 +141,14 @@ while running:
     if equals_btn.Clicking():
         if addition == True:
             result = num1 + num2
-            print(result)
+            print(f"The Result is : {result}")
+            value = f"{value} = {result}"
             addition = False
         if subtraction:
             result = num1 - num2
-            print(result)
+            value = f"{value} = {result}"
+            print(f"The Result is : {result}")
             subtraction = False
-        
-        can_dial_number1 = True
-        can_dial_number2 = False
     
     # flip() the display to put your work on screen
     pygame.display.flip()
