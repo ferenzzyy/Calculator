@@ -4,14 +4,13 @@ import pygame
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((700, 500))
+app_name = "Pygame Calc(Short For calculator)"
+pygame.display.set_caption(app_name)
 clock = pygame.time.Clock()
 running = True
 dt = 0
 font = pygame.font.SysFont('Arial',40)
 
-player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-
-pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
 class Button():
     def __init__(self, btn_text, colour, size_x, size_y, pos_x, pos_y):
@@ -62,8 +61,6 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        # if event.type == pygame.MOUSEBUTTONDOWN and number1_btn.CheckForMouse():
-        #     print(number1_btn.btn_txt + ' Clicked!')
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
@@ -72,22 +69,6 @@ while running:
         item.DrawButton()
         item.Clicking()
     
-
-
-   
-    # pygame.draw.circle(screen, "red", player_pos, 40)
-
-    # keys = pygame.key.get_pressed()
-    # if keys[pygame.K_w]:
-    #     player_pos.y -= 300 * dt
-    # if keys[pygame.K_s]:
-    #     player_pos.y += 300 * dt
-    # if keys[pygame.K_a]:
-    #     player_pos.x -= 300 * dt
-    # if keys[pygame.K_d]:
-    #     player_pos.x += 300 * dt
-
-    # print(player_pos)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
