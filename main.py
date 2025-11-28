@@ -69,7 +69,9 @@ number_btns = [Button(str(data["number"]), "white", 100, 50, data["position"].x,
 operator_btn = [Button(str(data["number"]), "white", 100, 50, data["position"].x, data["position"].y) for data in operator_btn_data]
 
 equals_btn = Button("=", "white", 100, 50, 370, 310)
-clear_btn = Button("C", "white", 100, 50, 475, 200)
+clear_all_btn = Button("C", "white", 100, 50, 475, 200)
+clear_entry_btn = Button("CE", "white", 100, 50, 475, 255)
+
 
 first_number = True
 addition = False
@@ -77,7 +79,12 @@ subtraction = False
 results_given = False
 value = 0
 operator = False
-numbers=[""]
+numbers=[]
+
+def reset_number_list():
+    first_number = True
+    numbers = []
+    # numbers.clear()
 
 while running:
     mouse_pos = pygame.Vector2(pygame.mouse.get_pos(desktop=False)[0], pygame.mouse.get_pos(desktop=False)[1])
@@ -95,9 +102,15 @@ while running:
     screen.fill("black")
     screen.blit(screen_txt_surface, screen_txt_rect)
     equals_btn.DrawButton()
-    clear_btn.DrawButton()
+    clear_all_btn.DrawButton()
+    clear_entry_btn.DrawButton()
 
+    print(f"First Number Bool = {first_number}")
+    print(numbers)
 
+    if len(numbers) == 0:
+        first_number = True
+        numbers=[]
 
     # Renders Number Buttons
     for item in number_btns:
@@ -109,7 +122,8 @@ while running:
         # Then When numbers are pressed again store it into a slot after the operator
         if not equals_btn.Clicked():
             if item.Clicked() and isinstance(int(item.btn_txt), int) and first_number == True:
-                numbers[0] += item.btn_txt
+                numbers.append(item.btn_txt)
+                first_number = False 
         
             elif item.Clicked() and isinstance(int(item.btn_txt), int) and first_number == False:
                 if operator == True:
@@ -149,12 +163,15 @@ while running:
                     numbers += "-"
             # end match
 
-    if clear_btn.Clicked():
-        first_number = True
+    if clear_all_btn.Clicked():
         numbers.clear()
-        numbers=[""]
+
+    if clear_entry_btn.Clicked() and len(numbers) != 0:
+        numbers.pop(len(numbers) - 1)
+        
 
     
+
     value = f"{result_str}"
 
     # flip() the display to put your work on screen
