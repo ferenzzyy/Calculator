@@ -72,9 +72,12 @@ equals_btn = Button("=", "white", 100, 50, 370, 310)
 
 can_dial_number1 = True
 can_dial_number2 = False
+first_number = True
 addition = False
 subtraction = False
 value = 0
+operator = False
+numbers=[""]
 
 while running:
     mouse_pos = pygame.Vector2(pygame.mouse.get_pos(desktop=False)[0], pygame.mouse.get_pos(desktop=False)[1])
@@ -93,26 +96,43 @@ while running:
     screen.blit(screen_txt_surface, screen_txt_rect)
     equals_btn.DrawButton()
     # print(can_dial_number1, can_dial_number2)
-
+    print(f"Operator = {operator}, First Number = {first_number} {num1str}" )
     # Renders Number Buttons
     for item in number_btns:
         item.DrawButton()
-        if can_dial_number1:
-            if item.Clicking() and isinstance(int(item.btn_txt), int) :
-                # can_dial_number1 = False
-                
-                num1str = f"{num1str}{item.btn_txt}"
-                num1 = int(num1str)
-                value = f"{num1}"
-                print(f"Number 1: {num1}")
-                # can_dial_number2 = True
+
+        # If equals isnt pressed and a button is pressed and if that button is a number button
+        # Store the numbers being pressed into the 1st slot of the numbers array
+        # When an operator is pressed stop taking in input for the index before the operator slot
+        # Then When numbers are pressed again store it into a slot after the operator
+        if not equals_btn.Clicking():
+            if item.Clicking() and isinstance(int(item.btn_txt), int) and first_number == True:
+                numbers[0] += item.btn_txt
+        
+            elif item.Clicking() and isinstance(int(item.btn_txt), int) and first_number == False:
+                if operator == True:
+                    numbers.append(item.btn_txt)
+                    operator = False
+                else:
+                    numbers[len(numbers) - 1] += item.btn_txt
         else:
-            if can_dial_number2:
-                if item.Clicking() and isinstance(int(item.btn_txt), int):
-                    num2str = f"{num2str}{item.btn_txt}"
-                    num2 = int(num2str)
-                    value = f"{value}{num2}"
-                    print(f"Number 2: {num2}")
+            pass
+        # if can_dial_number1:
+        #     if item.Clicking() and isinstance(int(item.btn_txt), int) :
+        #         # can_dial_number1 = False
+                
+        #         num1str = f"{num1str}{item.btn_txt}"
+        #         num1 = int(num1str)
+        #         value = f"{num1}"
+        #         print(f"Number 1: {num1}")
+        #         # can_dial_number2 = True
+        # else:
+        #     if can_dial_number2:
+        #         if item.Clicking() and isinstance(int(item.btn_txt), int):
+        #             num2str = f"{num2str}{item.btn_txt}"
+        #             num2 = int(num2str)
+        #             value = f"{value}{num2}"
+        #             print(f"Number 2: {num2}")
 
     if can_dial_number1 == True:
         can_dial_number2 = False
@@ -124,32 +144,38 @@ while running:
     for item in operator_btn:
         item.DrawButton()
         if item.Clicking():
-            can_dial_number1 = False
+            operator = True
+            # can_dial_number1 = False
+            first_number = False
             match (item.btn_txt):
                 case ("+"):
                     print("+")
                     value = f"{value} {"+"} "
+                    numbers += "+"
                     addition = True
                     
                 case ("-"):
                     print("-")
                     value = f"{value} {"-"} "
+                    numbers += "-"
                     subtraction = True
             # end match
 
     
-    if equals_btn.Clicking():
-        if addition == True:
-            result = num1 + num2
-            print(f"The Result is : {result}")
-            value = f"{value} = {result}"
-            addition = False
-        if subtraction:
-            result = num1 - num2
-            value = f"{value} = {result}"
-            print(f"The Result is : {result}")
-            subtraction = False
+    # if equals_btn.Clicking():
+    #     if addition == True:
+    #         result = num1 + num2
+    #         print(f"The Result is : {result}")
+    #         value = f"{value} = {result}"
+    #         addition = False
+    #     if subtraction:
+    #         result = num1 - num2
+    #         value = f"{value} = {result}"
+    #         print(f"The Result is : {result}")
+    #         subtraction = False
     
+    value = f"{numbers}"
+
     # flip() the display to put your work on screen
     pygame.display.flip()
 
