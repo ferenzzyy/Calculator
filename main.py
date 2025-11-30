@@ -79,12 +79,18 @@ subtraction = False
 results_given = False
 value = 0
 operator = False
-numbers=[]
+entries=[]
+current_entry=[]
+display_entries=[""]
 
 def reset_number_list():
     first_number = True
-    numbers = []
-    # numbers.clear()
+    entries = []
+    # entries.clear()
+
+# def addition(numbers):
+#     for number in numbers:
+
 
 while running:
     mouse_pos = pygame.Vector2(pygame.mouse.get_pos(desktop=False)[0], pygame.mouse.get_pos(desktop=False)[1])
@@ -105,74 +111,92 @@ while running:
     clear_all_btn.DrawButton()
     clear_entry_btn.DrawButton()
 
-    print(f"First Number Bool = {first_number}")
-    print(numbers)
 
-    if len(numbers) == 0:
+    if len(entries) == 0:
         first_number = True
-        numbers=[]
+        entries=[]
 
     # Renders Number Buttons
     for item in number_btns:
         item.DrawButton()
 
-        # If equals isnt pressed and a button is pressed and if that button is a number button
-        # Store the numbers being pressed into the 1st slot of the numbers array
-        # When an operator is pressed stop taking in input for the index before the operator slot
-        # Then When numbers are pressed again store it into a slot after the operator
+        # Takes the FIRST number ever being pressed and puts it into a current entry list
         if not equals_btn.Clicked():
             if item.Clicked() and isinstance(int(item.btn_txt), int) and first_number == True:
-                numbers.append(item.btn_txt)
-                first_number = False 
+                current_entry.append(item.btn_txt)
+                first_number = False
+                entry = "".join(current_entry)
+                display_entries[0] = entry
         
+        # After the FIRST EVER number is pressed the rest of the entries is handled here
             elif item.Clicked() and isinstance(int(item.btn_txt), int) and first_number == False:
                 if operator == True:
-                    numbers.append(item.btn_txt)
+
+                    current_entry.append(item.btn_txt)
+                    entry = "".join(current_entry)
+                    display_entries.append(entry)
+                    entries = display_entries
+
                     operator = False
+
                 else:
-                    numbers[len(numbers) - 1] += item.btn_txt
-            result_str = " ".join(numbers)
+                    current_entry.append(item.btn_txt)
+                    entry = "".join(current_entry)
+                    display_entries[len(display_entries) - 1] = entry
+                    entries = display_entries       
+            result_str = " ".join(entries)
+
+
         elif equals_btn.Clicked() and results_given == False:
                 
-                result_str = " ".join(numbers)
+                result_str = " ".join(entries)
                 result = eval(result_str)
                 
-                numbers.clear()
-                numbers.append(str(result))
-                result_str = " ".join(numbers)
+                entries.clear()
+                entries.append(str(result))
+                result_str = " ".join(entries)
                 results_given = True
                 print(result)
 
     # Renders Operator buttons 
     for item in operator_btn:
         item.DrawButton()
-        if item.Clicked():
+        if item.Clicked() and not operator:
             operator = True
             results_given = False
-            # can_dial_number1 = False
             first_number = False
+
+            current_entry.clear()
+
+            print(entry)
+
             match (item.btn_txt):
                 case ("+"):
                     print("+")
-                    value = f"{value} {"+"} "
-                    numbers += "+"
+                    display_entries.append(item.btn_txt)
+                    entries = display_entries
+                    # value = f"{value} {"+"} "
+                    # entries += "+"
                     
                 case ("-"):
                     print("-")
-                    value = f"{value} {"-"} "
-                    numbers += "-"
+                    display_entries.append(item.btn_txt)
+                    entries = display_entries
+                    # value = f"{value} {"-"} "
+                    # entries += "-"
             # end match
 
     if clear_all_btn.Clicked():
-        numbers.clear()
+        entries.clear()
 
-    if clear_entry_btn.Clicked() and len(numbers) != 0:
-        numbers.pop(len(numbers) - 1)
+    if clear_entry_btn.Clicked() and len(entries) != 0:
+        entries.pop(len(entries) - 1)
         
 
-    
+    print(display_entries)
+    display_entry = " ".join(display_entries)
 
-    value = f"{result_str}"
+    value = f"{display_entry}"
 
     # flip() the display to put your work on screen
     pygame.display.flip()
