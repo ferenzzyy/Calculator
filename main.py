@@ -144,17 +144,18 @@ while running:
                     entry = "".join(current_entry)
                     display_entries[len(display_entries) - 1] = entry
                     entries = display_entries       
-            result_str = " ".join(entries)
 
 
         elif equals_btn.Clicked() and results_given == False:
                 
-                result_str = " ".join(entries)
-                result = eval(result_str)
+                entry = "".join(entries)
+                result = eval(entry) 
                 
                 entries.clear()
                 entries.append(str(result))
-                result_str = " ".join(entries)
+
+                display_entries = entries
+                
                 results_given = True
                 print(result)
 
@@ -175,15 +176,11 @@ while running:
                     print("+")
                     display_entries.append(item.btn_txt)
                     entries = display_entries
-                    # value = f"{value} {"+"} "
-                    # entries += "+"
                     
                 case ("-"):
                     print("-")
                     display_entries.append(item.btn_txt)
                     entries = display_entries
-                    # value = f"{value} {"-"} "
-                    # entries += "-"
             # end match
 
     if clear_all_btn.Clicked():
