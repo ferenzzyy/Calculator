@@ -79,9 +79,9 @@ subtraction = False
 results_given = False
 value = 0
 operator = False
-entries=[]
+entries=[""]
 current_entry=[]
-display_entries=[""]
+display_entries=[]
 
 def reset_number_list():
     first_number = True
@@ -114,7 +114,7 @@ while running:
 
     if len(entries) == 0:
         first_number = True
-        entries=[]
+        entries=[""]
 
     # Renders Number Buttons
     for item in number_btns:
@@ -126,7 +126,8 @@ while running:
                 current_entry.append(item.btn_txt)
                 first_number = False
                 entry = "".join(current_entry)
-                display_entries[0] = entry
+                entries[0] = entry
+                display_entries = entries
         
         # After the FIRST EVER number is pressed the rest of the entries is handled here
             elif item.Clicked() and isinstance(int(item.btn_txt), int) and first_number == False:
@@ -134,20 +135,23 @@ while running:
 
                     current_entry.append(item.btn_txt)
                     entry = "".join(current_entry)
-                    display_entries.append(entry)
-                    entries = display_entries
+                    entries.append(entry)
+                    display_entries = entries
 
                     operator = False
 
                 else:
                     current_entry.append(item.btn_txt)
                     entry = "".join(current_entry)
-                    display_entries[len(display_entries) - 1] = entry
-                    entries = display_entries       
+                    entries[len(entries) - 1] = entry
+                    display_entries = entries       
 
 
         elif equals_btn.Clicked() and results_given == False:
                 
+
+                current_entry.clear()
+
                 entry = "".join(entries)
                 result = eval(entry) 
                 
@@ -174,23 +178,25 @@ while running:
             match (item.btn_txt):
                 case ("+"):
                     print("+")
-                    display_entries.append(item.btn_txt)
-                    entries = display_entries
+                    entries.append(item.btn_txt)
+                    display_entries = entries
                     
                 case ("-"):
                     print("-")
-                    display_entries.append(item.btn_txt)
-                    entries = display_entries
+                    entries.append(item.btn_txt)
+                    display_entries = entries
             # end match
 
     if clear_all_btn.Clicked():
         entries.clear()
+        display_entries = entries
 
     if clear_entry_btn.Clicked() and len(entries) != 0:
         entries.pop(len(entries) - 1)
+        display_entries = entries
         
 
-    print(display_entries)
+    print(current_entry)
     display_entry = " ".join(display_entries)
 
     value = f"{display_entry}"
