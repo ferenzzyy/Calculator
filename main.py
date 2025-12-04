@@ -70,7 +70,6 @@ operator_btn = [Button(str(data["number"]), "white", 100, 50, data["position"].x
 
 equals_btn = Button("=", "white", 100, 50, 370, 310)
 clear_all_btn = Button("C", "white", 100, 50, 475, 200)
-clear_entry_btn = Button("CE", "white", 100, 50, 475, 255)
 
 
 first_number = True
@@ -83,14 +82,36 @@ entries=[""]
 current_entry=[]
 display_entries=[]
 
+
+
 def reset_number_list():
     first_number = True
     entries = []
     # entries.clear()
 
-# def addition(numbers):
-#     for number in numbers:
+def addition(numbers):
+    calculation=[]
 
+    first_addition = True
+    addition_result = 0
+
+    # Go through the list 
+    # for the 1st "+" found get the one before and after that "+"
+    for i in range(len(numbers)):
+        if numbers[i] != "+":
+            # print(numbers[i])
+            calculation.append(float(numbers[i]))
+            print(calculation)
+
+            # addition_result = calculation[0]
+    for item in calculation:
+        addition_result += item
+            
+        print(addition_result)
+        # return addition_result
+
+
+    
 
 while running:
     mouse_pos = pygame.Vector2(pygame.mouse.get_pos(desktop=False)[0], pygame.mouse.get_pos(desktop=False)[1])
@@ -109,7 +130,6 @@ while running:
     screen.blit(screen_txt_surface, screen_txt_rect)
     equals_btn.DrawButton()
     clear_all_btn.DrawButton()
-    clear_entry_btn.DrawButton()
 
 
     if len(entries) == 0:
@@ -132,7 +152,8 @@ while running:
         # After the FIRST EVER number is pressed the rest of the entries is handled here
             elif item.Clicked() and isinstance(int(item.btn_txt), int) and first_number == False:
                 if operator == True:
-
+                    
+                    current_entry.clear()
                     current_entry.append(item.btn_txt)
                     entry = "".join(current_entry)
                     entries.append(entry)
@@ -153,7 +174,9 @@ while running:
                 current_entry.clear()
 
                 entry = "".join(entries)
-                result = eval(entry) 
+                result = eval(entry)
+
+                addition(entries)
                 
                 entries.clear()
                 entries.append(str(result))
@@ -161,7 +184,7 @@ while running:
                 display_entries = entries
                 
                 results_given = True
-                print(result)
+                # print(result)
 
     # Renders Operator buttons 
     for item in operator_btn:
@@ -172,31 +195,32 @@ while running:
             first_number = False
 
             current_entry.clear()
+            current_entry.append(item.btn_txt)
+            entry = "".join(current_entry)
+            entries.append(entry)
+            display_entries = entries
 
-            print(entry)
-
-            match (item.btn_txt):
-                case ("+"):
-                    print("+")
-                    entries.append(item.btn_txt)
-                    display_entries = entries
+            # match (item.btn_txt):
+            #     case ("+"):
+            #         # print("+")
                     
-                case ("-"):
-                    print("-")
-                    entries.append(item.btn_txt)
-                    display_entries = entries
+                    
+            #     case ("-"):
+            #         # print("-")
+            #         # entries.append(item.btn_txt)
+            #         display_entries = entries
             # end match
 
     if clear_all_btn.Clicked():
+        current_entry.clear()
         entries.clear()
         display_entries = entries
 
-    if clear_entry_btn.Clicked() and len(entries) != 0:
-        entries.pop(len(entries) - 1)
-        display_entries = entries
         
+    # print(entries)
+    # print(current_entry)
 
-    print(current_entry)
+    # print(entries)
     display_entry = " ".join(display_entries)
 
     value = f"{display_entry}"
