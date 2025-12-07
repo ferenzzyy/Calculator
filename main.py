@@ -3,7 +3,7 @@ import pygame
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((600, 400))
+screen = pygame.display.set_mode((530, 400))
 app_name = "Pygame Calc(Short For calculator)"
 pygame.display.set_caption(app_name)
 clock = pygame.time.Clock()
@@ -52,13 +52,17 @@ no_btn_data = [
     {"number" : 6, "position" : pygame.Vector2(265, 255)},
     {"number" : 7, "position" : pygame.Vector2(55, 310)},
     {"number" : 8, "position" : pygame.Vector2(160, 310)},
-    {"number" : 9, "position" : pygame.Vector2(265, 310)}
+    {"number" : 9, "position" : pygame.Vector2(265, 310)},
+    {"number" : 0, "position" : pygame.Vector2(160, 365)}
 ]
 
 operator_btn_data = [
     {"number" : "+", "position" : pygame.Vector2(370, 200)},
-    {"number" : "-", "position" : pygame.Vector2(370, 255)}
-    # {"number" : "=", "position" : pygame.Vector2(370, 310)}
+    {"number" : "-", "position" : pygame.Vector2(370, 255)},
+    {"number" : "÷", "position" : pygame.Vector2(475, 200)},
+    {"number" : "x", "position" : pygame.Vector2(475, 255)},
+    {"number" : ".", "position" : pygame.Vector2(55, 365)}
+    # {"number" : "()", "position" : pygame.Vector2(265, 365)}
 ]
 
 # Creates a list of buttons for the numbers 
@@ -69,7 +73,8 @@ number_btns = [Button(str(data["number"]), "white", 100, 50, data["position"].x,
 operator_btn = [Button(str(data["number"]), "white", 100, 50, data["position"].x, data["position"].y) for data in operator_btn_data]
 
 equals_btn = Button("=", "white", 100, 50, 370, 310)
-clear_all_btn = Button("C", "white", 100, 50, 475, 200)
+clear_all_btn = Button("C", "white", 100, 50, 475, 310)
+bracket_btn = Button("()","white", 100, 50, 265, 365)
 
 
 first_number = True
@@ -130,6 +135,7 @@ while running:
     screen.blit(screen_txt_surface, screen_txt_rect)
     equals_btn.DrawButton()
     clear_all_btn.DrawButton()
+    bracket_btn.DrawButton()
 
 
     if len(entries) == 0:
@@ -173,10 +179,15 @@ while running:
 
                 current_entry.clear()
 
+                for i in range(len(entries)):
+                    if entries[i] == "x":
+                        entries[i] = "*"
+                        
+
                 entry = "".join(entries)
                 result = eval(entry)
 
-                addition(entries)
+                # addition(entries)
                 
                 entries.clear()
                 entries.append(str(result))
@@ -199,6 +210,7 @@ while running:
             entry = "".join(current_entry)
             entries.append(entry)
             display_entries = entries
+            
 
             # match (item.btn_txt):
             #     case ("+"):
@@ -221,7 +233,7 @@ while running:
     # print(current_entry)
 
     # print(entries)
-    display_entry = " ".join(display_entries)
+    display_entry = " ".join(entries)
 
     value = f"{display_entry}"
 
