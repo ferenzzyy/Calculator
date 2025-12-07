@@ -9,7 +9,11 @@ pygame.display.set_caption(app_name)
 clock = pygame.time.Clock()
 running = True
 dt = 0
+
+
 font = pygame.font.SysFont('Arial',40)
+
+
 
 result = 0
 result_str = " "
@@ -116,14 +120,21 @@ def addition(numbers):
         print(addition_result)
         # return addition_result
 
+def add_more_space():
+    if screen_txt_rect.size[0] >= 506:
+        display_entries.append("\n")
+
 def add_to_entries(entry_):
     current_entry.clear()
     current_entry.append(entry_)
+    
+    add_more_space()
 
     entry = "".join(current_entry)
     entries.append(entry)
-    
+
     display_entries = entries
+    # add_more_space()
     # first_bracket = True
 
     
@@ -138,8 +149,15 @@ while running:
 
     screen_txt_surface = font.render(str(value), True, "white")
     screen_txt_rect = screen_txt_surface.get_rect()
-    screen_txt_rect.center = pygame.Vector2(265,145) 
+    # screen_txt_rect.bottomleft = pygame.Vector2(10,145)
+    
+    
 
+    screen_txt_rect.bottomright = pygame.Vector2(520,145)
+
+
+
+    
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
     screen.blit(screen_txt_surface, screen_txt_rect)
@@ -148,9 +166,9 @@ while running:
     bracket_btn.DrawButton()
 
 
-    if len(entries) == 0:
+    # if len(entries) == 0:
         # first_number = True
-        entries=[""]
+        
 
     # Renders Number Buttons
     for item in number_btns:
@@ -164,12 +182,14 @@ while running:
                 entry = "".join(current_entry)
                 entries[0] = entry
                 display_entries = entries
+                add_more_space()
         
         # After the FIRST EVER number is pressed the rest of the entries is handled here
             elif item.Clicked() and isinstance(int(item.btn_txt), int) and first_number == False:
                 if operator == True:
                     
                     add_to_entries(item.btn_txt)
+                    add_more_space()
 
                     operator = False
 
@@ -178,6 +198,7 @@ while running:
                     entry = "".join(current_entry)
                     entries[len(entries) - 1] = entry
                     display_entries = entries       
+                    
 
 
         elif equals_btn.Clicked() and results_given == False:
@@ -217,7 +238,8 @@ while running:
         first_number = True
         first_bracket = True
         current_entry.clear()
-        entries.clear()
+        # entries.clear()
+        entries=[""]
         display_entries = entries
 
 
@@ -231,7 +253,7 @@ while running:
             first_bracket = True
 
 
-
+    print (screen_txt_rect.size)
         
     # print(entries)
     # print(current_entry)
