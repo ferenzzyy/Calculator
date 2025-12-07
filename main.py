@@ -78,6 +78,7 @@ bracket_btn = Button("()","white", 100, 50, 265, 365)
 
 
 first_number = True
+first_bracket = True
 addition = False
 subtraction = False
 results_given = False
@@ -115,6 +116,15 @@ def addition(numbers):
         print(addition_result)
         # return addition_result
 
+def add_to_entries(entry_):
+    current_entry.clear()
+    current_entry.append(entry_)
+
+    entry = "".join(current_entry)
+    entries.append(entry)
+    
+    display_entries = entries
+    # first_bracket = True
 
     
 
@@ -139,7 +149,7 @@ while running:
 
 
     if len(entries) == 0:
-        first_number = True
+        # first_number = True
         entries=[""]
 
     # Renders Number Buttons
@@ -159,11 +169,7 @@ while running:
             elif item.Clicked() and isinstance(int(item.btn_txt), int) and first_number == False:
                 if operator == True:
                     
-                    current_entry.clear()
-                    current_entry.append(item.btn_txt)
-                    entry = "".join(current_entry)
-                    entries.append(entry)
-                    display_entries = entries
+                    add_to_entries(item.btn_txt)
 
                     operator = False
 
@@ -204,29 +210,27 @@ while running:
             operator = True
             results_given = False
             first_number = False
+            add_to_entries(item.btn_txt)
 
-            current_entry.clear()
-            current_entry.append(item.btn_txt)
-            entry = "".join(current_entry)
-            entries.append(entry)
-            display_entries = entries
-            
-
-            # match (item.btn_txt):
-            #     case ("+"):
-            #         # print("+")
-                    
-                    
-            #     case ("-"):
-            #         # print("-")
-            #         # entries.append(item.btn_txt)
-            #         display_entries = entries
-            # end match
 
     if clear_all_btn.Clicked():
+        first_number = True
+        first_bracket = True
         current_entry.clear()
         entries.clear()
         display_entries = entries
+
+
+    if bracket_btn.Clicked():
+        if first_bracket:
+            add_to_entries("(")
+            first_bracket = False
+
+        else:
+            add_to_entries(")")
+            first_bracket = True
+
+
 
         
     # print(entries)
